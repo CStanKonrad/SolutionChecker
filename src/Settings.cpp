@@ -30,6 +30,27 @@ void SSettings::update(int argc, char *argv[])
                 throw "SSettings::update: No compare function arguments provided in next string";
             i += 1;
         }
+        else if (strcmp(argv[i], "-oa") == 0)
+        {
+            this->checkOrder = ECheckOrder::ALPHABETICAL;
+        }
+        else if (strcmp(argv[i], "-rpref") == 0)
+        {
+
+            if (i + 1 < argc)
+                this->runPrefix = argv[i + 1];
+            else
+                throw "SSettings::update: No run prefix provided in next string";
+            i += 1;
+        }
+        else if (strcmp(argv[i], "-f") == 0)
+        {
+            if (i + 1 < argc)
+                this->subFolder = argv[i + 1];
+            else
+                throw "SSettings::update: No folder name provided in next string";
+            i += 1;
+        }
         else
         {
             throw (std::string("SSettings::update: No arg called \"") + std::string(argv[i]) + std::string("\" exists")).c_str();
