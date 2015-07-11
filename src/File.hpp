@@ -2,6 +2,7 @@
 #define CSTANKONRAD_TASKCHECKER_FILE_HPP_INCLUDED
 
 #include <string>
+#include <fstream>
 
 #include <dirent.h>
 
@@ -21,6 +22,9 @@ public:
     */
     std::string nextFile();
 };
+
+/* read characters to string while (next_character != new_line) and read new_line (but not to string) */
+std::string readLine(std::ifstream &_in);
 
 
 #endif // CSTANKONRAD_TASKCHECKER_FILE_HPP_INCLUDED

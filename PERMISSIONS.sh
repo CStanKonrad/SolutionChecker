@@ -1,0 +1,1 @@
+chmod +x check example cmp/default
