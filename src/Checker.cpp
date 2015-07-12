@@ -63,6 +63,7 @@ void checkDiff(const SSettings &_settings)
         std::sort(inputNames.begin(), inputNames.end());
     }
 
+    int sysReturnVal;
     for (unsigned int i = 0; i < inputNames.size(); i++)
     {
         fileNameBufIn = inputNames[i];
@@ -74,8 +75,17 @@ void checkDiff(const SSettings &_settings)
             stoper.end();
 
             fileNameBufOut = makeOutFromIn(fileNameBufIn);
+
             std::cout << fileNameBufIn << ": ";
-            std::cout << stoper.getTimeString() << " " << (system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + fullPath + fileNameBufOut + std::string("\"  tmp/tested.out")).c_str()) == 0 ? _settings.okMessage : _settings.waMessage) << std::endl;
+            std::cout << stoper.getTimeString() << " ";
+
+            sysReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + fullPath + fileNameBufOut + std::string("\"  tmp/tested.out")).c_str());
+            std::cout << ( sysReturnVal == 0 ? _settings.okMessage : _settings.waMessage) << std::endl;
+
+            if (sysReturnVal != 0 && _settings.waStop == true)
+            {
+                return;
+            }
         }
     }
 

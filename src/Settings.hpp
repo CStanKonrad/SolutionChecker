@@ -1,5 +1,5 @@
-#ifndef CSTANKONRAD_TASKCHECKER_SETTINGS_HPP_INCLUDED
-#define CSTANKONRAD_TASKCHECKER_SETTINGS_HPP_INCLUDED
+#ifndef CSTANKONRAD_SOLUTIONCHECKER_SETTINGS_HPP_INCLUDED
+#define CSTANKONRAD_SOLUTIONCHECKER_SETTINGS_HPP_INCLUDED
 
 #include <string>
 #include <vector>
@@ -11,6 +11,8 @@ struct SSettings
 {
     ECheckType checkType = ECheckType::DIFF;
     ECheckOrder checkOrder = ECheckOrder::DEFAULT;
+
+    bool waStop = false;  //stop when cmp returns <> 0
 
     std::string runPrefix = "./";
 
@@ -28,4 +30,4 @@ struct SSettings
 };
 
 
-#endif // CSTANKONRAD_TASKCHECKER_SETTINGS_HPP_INCLUDED
+#endif // CSTANKONRAD_SOLUTIONCHECKER_SETTINGS_HPP_INCLUDED

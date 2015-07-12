@@ -9,6 +9,8 @@ void SSettings::update(const std::vector<std::string> &_args)
             this->taskName = _args[i];
         else if (_args[i] == "-check")
             this->checkType = ECheckType::CHECKER;
+        else if (_args[i] == "-was")
+            this->waStop = true;
         else if (_args[i] == "-nocolor")
         {
             this->okMessage = "OK";
