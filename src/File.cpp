@@ -27,3 +27,15 @@ std::string CFile::nextFile()
     else
         return std::string(dirElement->d_name);
 }
+
+
+std::string readLine(std::ifstream &_in)
+{
+    std::string result = "";
+    while (_in.peek() != '\n' && _in.eof() == false)
+    {
+        result += _in.get();
+    }
+    _in.get();
+    return result;
+}
