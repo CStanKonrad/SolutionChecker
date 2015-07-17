@@ -79,7 +79,7 @@ void SSettings::update(const std::vector<std::string> &_args)
         }
         else
         {
-            throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists")).c_str();
+            throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists"));
             continue;
         }
 

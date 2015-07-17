@@ -6,7 +6,7 @@ void CFile::openDir(std::string _dirPath)
     directory = opendir(_dirPath.c_str());
 
     if (directory == nullptr)
-        throw (std::string("CFile::openDir: Can't open directory: ") + _dirPath).c_str();
+        throw (std::string("CFile::openDir: Can't open directory: ") + _dirPath);
 }
 
 void CFile::closeDir()

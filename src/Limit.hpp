@@ -8,7 +8,7 @@ class CLimit
 private:
     const std::string UNLIMITED = "unlimited";
 public:
-    std::string memoryLimitFunctionName = "ulimit";
+    std::string memoryLimitFunctionName = "ulimit";	//!@#still beta#@!
     std::string memoryLimitArguments = "";
 
     std::string timeLimitFunctionName = "timeout";
