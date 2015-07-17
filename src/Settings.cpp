@@ -53,6 +53,30 @@ void SSettings::update(const std::vector<std::string> &_args)
                 throw "SSettings::update: No folder name provided in next string";
             i += 1;
         }
+        else if (_args[i] == "-meml")
+        {
+            if (i + 1 < _args.size())
+                this->limits.virtualMemory = _args[i + 1];
+            else
+                throw "SSettings::update: No virtual mememory limit provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-stal")
+        {
+            if (i + 1 < _args.size())
+                this->limits.stackMemory = _args[i + 1];
+            else
+                throw "SSettings::update: No stack memory limit provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-time")
+        {
+            if (i + 1 < _args.size())
+                this->limits.time = _args[i + 1];
+            else
+                throw "SSettings::update: No time limit provided in next string";
+            i += 1;
+        }
         else
         {
             throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists")).c_str();
@@ -60,4 +84,5 @@ void SSettings::update(const std::vector<std::string> &_args)
         }
 
     }
+    this->limits.refresh();
 }

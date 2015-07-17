@@ -64,20 +64,26 @@ void checkDiff(const SSettings &_settings)
     }
 
     int sysReturnVal;
+    int solutionRetrunVal;
     for (unsigned int i = 0; i < inputNames.size(); i++)
     {
         fileNameBufIn = inputNames[i];
 
         if (strcmp(&fileNameBufIn[fileNameBufIn.size() - 3], ".in") == 0)
         {
+
             stoper.begin();
-            system((_settings.runPrefix + std::string("\"") + _settings.taskName + std::string("\" < \"") + fullPath + fileNameBufIn + std::string("\" > tmp/tested.out")).c_str());
+            solutionRetrunVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
+             + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
+             + _settings.runPrefix + std::string("\"") + _settings.taskName + std::string("\" < \"") + fullPath + fileNameBufIn + std::string("\" > tmp/tested.out")
+           ).c_str());
             stoper.end();
 
             fileNameBufOut = makeOutFromIn(fileNameBufIn);
 
             std::cout << fileNameBufIn << ": ";
             std::cout << stoper.getTimeString() << " ";
+            std::cout << "ret: " << solutionRetrunVal << " ";
 
             sysReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + fullPath + fileNameBufOut + std::string("\"  tmp/tested.out")).c_str());
             std::cout << ( sysReturnVal == 0 ? _settings.okMessage : _settings.waMessage) << std::endl;
