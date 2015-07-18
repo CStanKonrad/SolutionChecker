@@ -1,6 +1,5 @@
 #include "Checker.hpp"
 #include "File.hpp"
-#include "Time.hpp"
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -51,6 +50,14 @@ void checkDiff(const SSettings &_settings)
     std::string fileNameBufIn = dirBrowser.nextFile();
     std::string fileNameBufOut;
 
+    if (_settings.testName.size() > 0)
+    {
+        fileNameBufIn = _settings.testName;
+        fileNameBufOut = makeOutFromIn(fileNameBufIn);
+
+        checkTest(_settings, stoper, fullPath, fileNameBufIn, fileNameBufOut);
+        return;
+    }
 
     std::vector <std::string> inputNames;
     while (fileNameBufIn.size() > 0)
@@ -63,36 +70,43 @@ void checkDiff(const SSettings &_settings)
         std::sort(inputNames.begin(), inputNames.end());
     }
 
-    int sysReturnVal;
-    int solutionRetrunVal;
+    SCheckResult checkResult;
     for (unsigned int i = 0; i < inputNames.size(); i++)
     {
         fileNameBufIn = inputNames[i];
 
         if (strcmp(&fileNameBufIn[fileNameBufIn.size() - 3], ".in") == 0)
         {
+			fileNameBufOut = makeOutFromIn(fileNameBufIn);
 
-            stoper.begin();
-            solutionRetrunVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
-             + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
-             + _settings.runPrefix + std::string("\"") + _settings.taskName + std::string("\" < \"") + fullPath + fileNameBufIn + std::string("\" > tmp/tested.out")
-           ).c_str());
-            stoper.end();
+            checkResult = checkTest(_settings, stoper, fullPath, fileNameBufIn, fileNameBufOut);
 
-            fileNameBufOut = makeOutFromIn(fileNameBufIn);
-
-            std::cout << fileNameBufIn << ": ";
-            std::cout << stoper.getTimeString() << " ";
-            std::cout << "ret: " << solutionRetrunVal << " ";
-
-            sysReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + fullPath + fileNameBufOut + std::string("\"  tmp/tested.out")).c_str());
-            std::cout << ( sysReturnVal == 0 ? _settings.okMessage : _settings.waMessage) << std::endl;
-
-            if (sysReturnVal != 0 && _settings.waStop == true)
-            {
-                return;
-            }
+            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
+				return;
         }
     }
 
+}
+SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile)
+{
+	SCheckResult result;
+	_stoper.begin();
+	result.solutionReturnVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
+	 + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
+	 + _settings.runPrefix + std::string("\"") + _settings.taskName + std::string("\" < \"") + _fullPath + _inputFile + std::string("\" > tmp/tested.out")
+   ).c_str());
+	_stoper.end();
+
+	std::cout << _inputFile << ": ";
+	std::cout << _stoper.getTimeString() << " ";
+	std::cout << "r: " << result.solutionReturnVal << " ";
+
+	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _outputFile + std::string("\"  tmp/tested.out")).c_str());
+	if (result.cmpReturnVal != int(result.ECmpRet::OK) && _settings.waSave == true)
+	{
+        copyFile("tmp/tested.out", _fullPath + std::string("solution.wa/"), _outputFile);
+	}
+	std::cout << (result.solutionReturnVal == int(result.ESolRet::OK) ? "" : _settings.errorMessage + std::string(" "));
+    std::cout << (result.cmpReturnVal == int(result.ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;
+	return result;
 }

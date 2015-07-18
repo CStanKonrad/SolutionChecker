@@ -13,13 +13,15 @@ struct SSettings
     ECheckType checkType = ECheckType::DIFF;
     ECheckOrder checkOrder = ECheckOrder::DEFAULT;
 
-    bool waStop = false;  //stop when cmp returns <> 0
+    bool waStop = false;	//stop when cmp returns <> 0
+    bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
 
     std::string runPrefix = "./";
 
     std::string subFolder = "";
 
+    std::string testName = "";  //if testName.size() > 0 then only this test is checked
     std::string taskName;
     std::string cmpFunction = "cmp/default";
     std::string cmpOptions = "";
@@ -27,6 +29,7 @@ struct SSettings
 
     std::string okMessage = "\033[1;32mOK\033[0m";
     std::string waMessage = "\033[1;31mWA\033[0m";
+    std::string errorMessage = "\033[1;41mERR\033[0m";
 
     CLimit limits;
 
