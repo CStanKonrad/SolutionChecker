@@ -13,7 +13,7 @@ string tesStr;
 
 bool isWhite(char _c)
 {
-	if (_c == ' ' || _c == '	' || _c == '\n')
+	if (_c == ' ' || _c == '	' || _c == '\n' || _c == '\r')
 		return true;
 	else
 		return false;
