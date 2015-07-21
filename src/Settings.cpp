@@ -7,8 +7,6 @@ void SSettings::update(const std::vector<std::string> &_args)
     {
         if (_args[i][0] != '-')
             this->taskName = _args[i];
-        else if (_args[i] == "-check")
-            this->checkType = ECheckType::CHECKER;
         else if (_args[i] == "-was")
             this->waStop = true;
         else if (_args[i] == "-nocolor")
@@ -37,11 +35,38 @@ void SSettings::update(const std::vector<std::string> &_args)
         {
             this->checkOrder = ECheckOrder::ALPHABETICAL;
         }
-        else if (_args[i] ==  "-rpref")
+        else if (_args[i] ==  "-srpref")
         {
 
             if (i + 1 < _args.size())
-                this->runPrefix = _args[i + 1];
+                this->solutionRunPrefix = _args[i + 1];
+            else
+                throw "SSettings::update: No run prefix provided in next string";
+            i += 1;
+        }
+        else if (_args[i] ==  "-grpref")
+        {
+
+            if (i + 1 < _args.size())
+                this->generatorRunPrefix = _args[i + 1];
+            else
+                throw "SSettings::update: No run prefix provided in next string";
+            i += 1;
+        }
+        else if (_args[i] ==  "-gena")
+        {
+
+            if (i + 1 < _args.size())
+                this->generatorOptions = _args[i + 1];
+            else
+                throw "SSettings::update: No generator arguments provided in next string";
+            i += 1;
+        }
+        else if (_args[i] ==  "-prpref")
+        {
+
+            if (i + 1 < _args.size())
+                this->patternRunPrefix = _args[i + 1];
             else
                 throw "SSettings::update: No run prefix provided in next string";
             i += 1;
@@ -97,6 +122,27 @@ void SSettings::update(const std::vector<std::string> &_args)
                 this->testName = _args[i + 1];
             else
                 throw "SSettings::update: No test name provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-gen")
+        {
+            if (i + 1 < _args.size())
+                this->generatorName = _args[i + 1];
+            else
+                throw "SSettings::update: No generator name provided in next string";
+            if (i + 2 < _args.size())
+                this->generatorNumOfCalls = std::stoi(_args[i + 2]);
+            else
+                throw "SSettings::update: No generator number of calls provided in next string";
+            i += 2;
+            this->checkType = ECheckType::GENERATE;
+        }
+        else if (_args[i] == "-pat")
+        {
+            if (i + 1 < _args.size())
+                this->pattern = _args[i + 1];
+            else
+                throw "SSettings::update: No pattern program name provided in next string";
             i += 1;
         }
         else
