@@ -9,7 +9,7 @@ int main(int _argc, char *_argv[])
 {
 	if (_argc < 3)
 	{
-		cerr << "Generator: No n provded" << endl;
+		cerr << "Generator: No n provided" << endl;
 		return -1;
 	}
 	srand(stoi(_argv[1]));
