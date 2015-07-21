@@ -17,9 +17,10 @@ struct SSettings
     bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
 
-    std::string runPrefix = "./";
+    std::string runPrefix = ""; //for example = "python2 "
 
-    std::string subFolder = "";
+    std::string testSubFolder = "";
+    std::string solutionSubFolder = "";
 
     std::string testName = "";  //if testName.size() > 0 then only this test is checked
     std::string taskName;

@@ -11,7 +11,7 @@ std::string createFullPath(const SSettings &_settings)
     std::string result = "tasks/";
     result += _settings.taskName;
     result += "/";
-    result += _settings.subFolder;
+    //result += _settings.testSubFolder;
     return result;
 }
 
@@ -45,7 +45,7 @@ void checkDiff(const SSettings &_settings)
     CStoper stoper;
     std::string fullPath = createFullPath(_settings);
     CFile dirBrowser;
-    dirBrowser.openDir(fullPath);
+    dirBrowser.openDir(fullPath + _settings.testSubFolder);
 
     std::string fileNameBufIn = dirBrowser.nextFile();
     std::string fileNameBufOut;
@@ -93,7 +93,7 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	_stoper.begin();
 	result.solutionReturnVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
 	 + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
-	 + _settings.runPrefix + std::string("\"") + _settings.taskName + std::string("\" < \"") + _fullPath + _inputFile + std::string("\" > tmp/tested.out")
+	 + _settings.runPrefix + std::string("\"") + _fullPath + _settings.solutionSubFolder + _settings.taskName + std::string("\" < \"") + _fullPath + _settings.testSubFolder +  _inputFile + std::string("\" > tmp/tested.out")
    ).c_str());
 	_stoper.end();
 
@@ -101,10 +101,10 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	std::cout << _stoper.getTimeString() << " ";
 	std::cout << "r: " << result.solutionReturnVal << " ";
 
-	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _outputFile + std::string("\"  tmp/tested.out")).c_str());
+	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _settings.testSubFolder +  _outputFile + std::string("\"  tmp/tested.out")).c_str());
 	if (result.cmpReturnVal != int(result.ECmpRet::OK) && _settings.waSave == true)
 	{
-        copyFile("tmp/tested.out", _fullPath + std::string("solution.wa/"), _outputFile);
+        copyFile("tmp/tested.out", _fullPath + _settings.testSubFolder + std::string("solution.wa/"), _outputFile);
 	}
 	std::cout << (result.solutionReturnVal == int(result.ESolRet::OK) ? "" : _settings.errorMessage + std::string(" "));
     std::cout << (result.cmpReturnVal == int(result.ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;

@@ -46,10 +46,18 @@ void SSettings::update(const std::vector<std::string> &_args)
                 throw "SSettings::update: No run prefix provided in next string";
             i += 1;
         }
-        else if (_args[i] ==  "-f")
+        else if (_args[i] ==  "-tf")
         {
             if (i + 1 < _args.size())
-                this->subFolder = _args[i + 1];
+                this->testSubFolder = _args[i + 1];
+            else
+                throw "SSettings::update: No folder name provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-sf")
+        {
+            if (i + 1 < _args.size())
+                this->solutionSubFolder = _args[i + 1];
             else
                 throw "SSettings::update: No folder name provided in next string";
             i += 1;
