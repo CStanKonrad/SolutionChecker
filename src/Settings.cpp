@@ -15,6 +15,7 @@ void SSettings::update(const std::vector<std::string> &_args)
         {
             this->okMessage = "OK";
             this->waMessage = "WA";
+            this->errorMessage = "ERR";
         }
         else if (_args[i] ==  "-cmpf")
         {
@@ -45,19 +46,67 @@ void SSettings::update(const std::vector<std::string> &_args)
                 throw "SSettings::update: No run prefix provided in next string";
             i += 1;
         }
-        else if (_args[i] ==  "-f")
+        else if (_args[i] ==  "-tf")
         {
             if (i + 1 < _args.size())
-                this->subFolder = _args[i + 1];
+                this->testSubFolder = _args[i + 1];
             else
                 throw "SSettings::update: No folder name provided in next string";
             i += 1;
         }
+        else if (_args[i] == "-sf")
+        {
+            if (i + 1 < _args.size())
+                this->solutionSubFolder = _args[i + 1];
+            else
+                throw "SSettings::update: No folder name provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-meml")
+        {
+	    throw "Unsupported operation";	//!!!!!!!!!!!
+            if (i + 1 < _args.size())
+                this->limits.virtualMemory = _args[i + 1];
+            else
+                throw "SSettings::update: No virtual mememory limit provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-stal")
+        {
+            if (i + 1 < _args.size())
+                this->limits.stackMemory = _args[i + 1];
+            else
+                throw "SSettings::update: No stack memory limit provided in next string";
+            i += 1;
+        }
+		else if (_args[i] == "-savwa")
+		{
+			this->waSave = true;
+		}
+        else if (_args[i] == "-time")
+        {
+            if (i + 1 < _args.size())
+                this->limits.time = _args[i + 1];
+            else
+                throw "SSettings::update: No time limit provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-tn")
+        {
+            if (i + 1 < _args.size())
+                this->testName = _args[i + 1];
+            else
+                throw "SSettings::update: No test name provided in next string";
+            i += 1;
+        }
         else
         {
-            throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists")).c_str();
+            throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists"));
             continue;
         }
 
     }
+    if (this->taskName.size() == 0)
+        throw "SSettings: No solution name provided";
+    this->limits.refresh();
 }

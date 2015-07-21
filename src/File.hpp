@@ -25,6 +25,8 @@ public:
 
 /* read characters to string while (next_character != new_line) and read new_line (but not to string) */
 std::string readLine(std::ifstream &_in);
+/* copy content from _from to _toDir/_toFile */
+void copyFile(std::string _from, std::string _toDir, std::string _toFile);
 
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_FILE_HPP_INCLUDED

@@ -1,4 +1,5 @@
 #include "File.hpp"
+//#include <iostream>
 
 void CFile::openDir(std::string _dirPath)
 {
@@ -6,7 +7,7 @@ void CFile::openDir(std::string _dirPath)
     directory = opendir(_dirPath.c_str());
 
     if (directory == nullptr)
-        throw (std::string("CFile::openDir: Can't open directory: ") + _dirPath).c_str();
+        throw (std::string("CFile::openDir: Can't open directory: ") + _dirPath);
 }
 
 void CFile::closeDir()
@@ -39,3 +40,19 @@ std::string readLine(std::ifstream &_in)
     _in.get();
     return result;
 }
+
+void copyFile(std::string _from, std::string _toDir, std::string _toFile)
+{
+    CFile dir;
+    try
+    {
+        dir.openDir(_toDir);
+    }
+    catch (std::string _bug)
+    {
+        //std::cout << "Creating: " << _toDir << std::endl;
+        system((std::string("mkdir \"") + _toDir + std::string("\"")).c_str());
+    }
+    system((std::string("cat \"") + _from + std::string("\" > \"") +  _toDir + _toFile + std::string("\"")).c_str());
+}
+

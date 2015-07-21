@@ -22,7 +22,7 @@ void loadArgs(vector<std::string> &_args, string _settFile, int _argc, char *_ar
     ifstream in(_settFile);
     if (!in.is_open())
     {
-        throw (string("main:loadArgs: can't open settings file \"") + _settFile + string("\"")).c_str();
+        throw (string("main:loadArgs: can't open settings file \"") + _settFile + string("\""));
     }
     else
     {
@@ -54,6 +54,10 @@ int main(int argc, char *argv[])
     catch (const char *_bug)
     {
         cerr << "Error: " << _bug << endl;
+    }
+    catch (string _bug)
+    {
+	cerr << "Error: " << _bug << endl;
     }
     //cerr << settings.cmpOptions << endl;
     //cerr << (int)settings.checkType << endl;
