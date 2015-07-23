@@ -54,7 +54,7 @@ void checkGenerate(const SSettings &_settings)
     std::string outputFile;
 
     int generatorReturnValue = 0;
-
+    SCheckResult checkResult;
     for (int i = 1; i <= _settings.generatorNumOfCalls; i++)
     {
         inputFile = (_settings.testName.size() == 0 ? std::to_string(i) + std::string(".in"): _settings.testName);
@@ -66,7 +66,12 @@ void checkGenerate(const SSettings &_settings)
             outputFile = makeOutFromIn(inputFile);
             system((_settings.patternRunPrefix + std::string("\"") + fullPath + _settings.pattern + std::string("\" < \"") + fullPath + _settings.testSubFolder +  inputFile + std::string("\" > \"")
             + fullPath + _settings.testSubFolder +  outputFile + std::string("\"")).c_str());
-            checkTest(_settings, stoper, fullPath, inputFile, outputFile);
+
+            checkResult = checkTest(_settings, stoper, fullPath, inputFile, outputFile);
+
+            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
+				return;
+
         }
 
     }
