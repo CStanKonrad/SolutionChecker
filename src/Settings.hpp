@@ -15,6 +15,7 @@ struct SSettings
 
     bool waStop = false;	//stop when cmp returns <> 0
     bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
+    bool isColorOutputEnabled = true;
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
 
     std::string solutionRunPrefix = ""; //for example = "python2 "
@@ -23,6 +24,7 @@ struct SSettings
     std::string solutionSubFolder = "";
 
     std::string testName = "";  //if testName.size() > 0 then only this test is checked
+    std::string taskSuperFolder = "tasks/";
     std::string taskName;
 
     std::string generatorName = "";
@@ -38,11 +40,18 @@ struct SSettings
     std::string okMessage = "\033[1;32mOK\033[0m";
     std::string waMessage = "\033[1;31mWA\033[0m";
     std::string errorMessage = "\033[1;41mERR\033[0m";
+    std::string tleMessage = "\033[1;43mTLE\033[0m";
 
     CLimit limits;
 
-    void update(const std::vector<std::string> &_args);
+    void update(std::vector<std::string> &_args);
 };
+
+
+void loadSettingsFromFile(std::vector<std::string> &_args, std::string _settFile);
+
+/* 'Creates' path to task folder */
+std::string createFullPath(const SSettings &_settings);
 
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_SETTINGS_HPP_INCLUDED

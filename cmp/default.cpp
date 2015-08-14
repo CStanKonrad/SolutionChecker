@@ -8,6 +8,9 @@ using namespace std;
 bool writeBug = false;
 bool writeFileNames = false;
 
+string waColor = "\033[1;33m";
+string clearColor = "\033[0m";
+
 string patStr;
 string tesStr;
 
@@ -56,6 +59,11 @@ int main(int _argc, char *_argv[])
 				writeBug = true;
 			else if (strcmp(_argv[i], "-fname") == 0)
 				writeFileNames = true;
+			else if (strcmp(_argv[i], "-nocolor") == 0)
+			{
+				waColor = "";
+				clearColor = "";
+			}
 			else
 			{
 				cerr << "CMP: No arg called \"" << _argv[i] << "\" exists" << endl;
@@ -91,7 +99,7 @@ int main(int _argc, char *_argv[])
 		else if (pb == false || tb == false)
 		{
 			if (writeBug)
-				cout << (pb == false ? "Output file is too long" : "Output file is too short") << endl;
+				cout << waColor << (pb == false ? "Output file is too long" : "Output file is too short") << clearColor << endl;
 			
 			pat.close();
 			tes.close();
@@ -104,7 +112,7 @@ int main(int _argc, char *_argv[])
 			{
 				pat.close();
 				tes.close();
-				cout << "String:" << strNr << " Expected:" << patStr << " Readed:" << tesStr << endl;
+				cout << waColor << "String:" << clearColor << strNr << waColor << " Expected:" << clearColor << patStr << waColor << " Readed:" << clearColor << tesStr << endl;
 			}
 			return -1;
 		}

@@ -1,0 +1,16 @@
+-gen
+generator
+100
+-prpref
+python2 
+-pat
+solpy/example
+-gena
+50
+-tf
+100rand/
+-was
+-srpref
+python2 
+-sf
+solpy/

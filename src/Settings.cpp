@@ -1,7 +1,28 @@
 #include "Settings.hpp"
+#include "File.hpp"
 #include <cstring>
+#include <fstream>
 
-void SSettings::update(const std::vector<std::string> &_args)
+void loadSettingsFromFile(std::vector<std::string> &_args, std::string _settFile)
+{
+    std::ifstream in(_settFile);
+    if (!in.is_open())
+    {
+        throw (std::string("SSettings:loadSettingsFromFile: can't open settings file \"") + _settFile + std::string("\""));
+    }
+    else
+    {
+        std::string bufRead;
+        do
+        {
+            bufRead = readLine(in);
+            _args.push_back(bufRead);
+        } while (in.eof() == false);
+
+    }
+}
+
+void SSettings::update(std::vector<std::string> &_args)
 {
     for (unsigned int i = 0; i < _args.size(); i++)
     {
@@ -11,9 +32,11 @@ void SSettings::update(const std::vector<std::string> &_args)
             this->waStop = true;
         else if (_args[i] == "-nocolor")
         {
+            this->isColorOutputEnabled = false;
             this->okMessage = "OK";
             this->waMessage = "WA";
             this->errorMessage = "ERR";
+            this->tleMessage = "TLE";
         }
         else if (_args[i] ==  "-cmpf")
         {
@@ -145,6 +168,29 @@ void SSettings::update(const std::vector<std::string> &_args)
                 throw "SSettings::update: No pattern program name provided in next string";
             i += 1;
         }
+        else if (_args[i] == "-tsf")
+        {
+            if (i + 1 < _args.size())
+            {
+                this->taskSuperFolder = _args[i + 1];
+            }
+            else
+                throw "SSettings::update: No task folder provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-cmd")
+        {
+            if (i + 1 < _args.size())
+            {
+                if (this->taskName.size() > 0)
+                    loadSettingsFromFile(_args, createFullPath(*this) + _args[i + 1]);
+                else
+                    loadSettingsFromFile(_args, _args[i + 1]);
+            }
+            else
+                throw "SSettings::update: No command file provided in next string";
+            i += 1;
+        }
         else
         {
             throw (std::string("SSettings::update: No arg called \"") + _args[i] + std::string("\" exists"));
@@ -155,4 +201,13 @@ void SSettings::update(const std::vector<std::string> &_args)
     if (this->taskName.size() == 0)
         throw "SSettings: No solution name provided";
     this->limits.refresh();
+}
+
+std::string createFullPath(const SSettings &_settings)
+{
+    std::string result = _settings.taskSuperFolder;
+    result += _settings.taskName;
+    result += "/";
+    //result += _settings.testSubFolder;
+    return result;
 }
