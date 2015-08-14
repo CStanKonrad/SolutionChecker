@@ -41,18 +41,23 @@ std::string readLine(std::ifstream &_in)
     return result;
 }
 
-void copyFile(std::string _from, std::string _toDir, std::string _toFile)
+void createDir(std::string _dir)
 {
     CFile dir;
     try
     {
-        dir.openDir(_toDir);
+        dir.openDir(_dir);
     }
     catch (std::string _bug)
     {
         //std::cout << "Creating: " << _toDir << std::endl;
-        system((std::string("mkdir \"") + _toDir + std::string("\"")).c_str());
+        system((std::string("mkdir \"") + _dir + std::string("\"")).c_str());
     }
+}
+
+void copyFile(std::string _from, std::string _toDir, std::string _toFile)
+{
+    createDir(_toDir);
     system((std::string("cat \"") + _from + std::string("\" > \"") +  _toDir + _toFile + std::string("\"")).c_str());
 }
 

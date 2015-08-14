@@ -27,6 +27,7 @@ std::string makeOutFromIn(const std::string &_inFileName);
 void checkSolution(const SSettings &_settings);
 
 void checkDiff(const SSettings &_settings);
+void checkGenerate(const SSettings &_settings);
 
 SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile);
 

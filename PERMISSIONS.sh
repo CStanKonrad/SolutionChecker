@@ -1,1 +1,1 @@
-chmod +x check example cmp/default
+chmod +x check tasks/example/example cmp/default tasks/example/generator

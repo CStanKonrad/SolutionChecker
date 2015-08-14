@@ -6,7 +6,7 @@
 #include "Limit.hpp"
 /*use existing files; check out using "checker" program;
 generate one file with "generator" check out with "pattern" program stop when difference, like before but safe when out is good too*/
-enum class ECheckType {DIFF, CHECKER, GENERATE, GENERATE_AND_SAVE};
+enum class ECheckType {DIFF, GENERATE};
 enum class ECheckOrder {DEFAULT, ALPHABETICAL};
 struct SSettings
 {
@@ -17,13 +17,20 @@ struct SSettings
     bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
 
-    std::string runPrefix = ""; //for example = "python2 "
+    std::string solutionRunPrefix = ""; //for example = "python2 "
 
     std::string testSubFolder = "";
     std::string solutionSubFolder = "";
 
     std::string testName = "";  //if testName.size() > 0 then only this test is checked
     std::string taskName;
+
+    std::string generatorName = "";
+    std::string generatorOptions = "";
+    std::string generatorRunPrefix = "";
+    std::string pattern = "";   //pattern program for genarate checking
+    std::string patternRunPrefix = "";
+    int generatorNumOfCalls = 0;
     std::string cmpFunction = "cmp/default";
     std::string cmpOptions = "";
 

@@ -33,11 +33,48 @@ void checkSolution(const SSettings &_settings)
     case ECheckType::DIFF:
         checkDiff(_settings);
         break;
+    case ECheckType::GENERATE:
+        checkGenerate(_settings);
+        break;
     default:
         throw "checkSolution: Sorry but that option isn't available";
         break;
     }
     return;
+}
+
+void checkGenerate(const SSettings &_settings)
+{
+    CStoper stoper;
+    std::string fullPath = createFullPath(_settings);
+
+    createDir(fullPath + _settings.testSubFolder);
+
+    std::string inputFile;
+    std::string outputFile;
+
+    int generatorReturnValue = 0;
+    SCheckResult checkResult;
+    for (int i = 1; i <= _settings.generatorNumOfCalls; i++)
+    {
+        inputFile = (_settings.testName.size() == 0 ? std::to_string(i) + std::string(".in"): _settings.testName);
+        generatorReturnValue = system((_settings.generatorRunPrefix + std::string("\"") + fullPath + _settings.generatorName + std::string("\"") + std::string(" ") + std::to_string(generatorReturnValue)
+        + std::string(" ") + _settings.generatorOptions + std::string(" > ") + std::string("\"") + fullPath + _settings.testSubFolder + inputFile + std::string("\"")).c_str());
+
+        if (_settings.pattern.size() != 0)
+        {
+            outputFile = makeOutFromIn(inputFile);
+            system((_settings.patternRunPrefix + std::string("\"") + fullPath + _settings.pattern + std::string("\" < \"") + fullPath + _settings.testSubFolder +  inputFile + std::string("\" > \"")
+            + fullPath + _settings.testSubFolder +  outputFile + std::string("\"")).c_str());
+
+            checkResult = checkTest(_settings, stoper, fullPath, inputFile, outputFile);
+
+            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
+				return;
+
+        }
+
+    }
 }
 
 void checkDiff(const SSettings &_settings)
@@ -93,7 +130,7 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	_stoper.begin();
 	result.solutionReturnVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
 	 + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
-	 + _settings.runPrefix + std::string("\"") + _fullPath + _settings.solutionSubFolder + _settings.taskName + std::string("\" < \"") + _fullPath + _settings.testSubFolder +  _inputFile + std::string("\" > tmp/tested.out")
+	 + _settings.solutionRunPrefix + std::string("\"") + _fullPath + _settings.solutionSubFolder + _settings.taskName + std::string("\" < \"") + _fullPath + _settings.testSubFolder +  _inputFile + std::string("\" > tmp/tested.out")
    ).c_str());
 	_stoper.end();
 
