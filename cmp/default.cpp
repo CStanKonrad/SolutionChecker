@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
@@ -33,6 +34,18 @@ bool readNext(ifstream &_file, string &_str)
 	}
 	else
 		return false;
+}
+
+string cutString(string _str, unsigned int _maxSize = 20)	//cuts string when bigger than _maxSize
+{
+	string result = "";
+	for (int i = 0; i < min<unsigned int>(_maxSize, _str.size()); i++)
+	{
+		result += _str[i];
+	}
+	if (_maxSize < _str.size())
+		result += "...";
+	return result;
 }
 
 int main(int _argc, char *_argv[])
@@ -112,7 +125,7 @@ int main(int _argc, char *_argv[])
 			{
 				pat.close();
 				tes.close();
-				cout << waColor << "String:" << clearColor << strNr << waColor << " Expected:" << clearColor << patStr << waColor << " Readed:" << clearColor << tesStr << endl;
+				cout << waColor << "String:" << clearColor << strNr << waColor << " Expected:" << clearColor << cutString(patStr) << waColor << " Readed:" << clearColor << cutString(tesStr) << endl;
 			}
 			return -1;
 		}
