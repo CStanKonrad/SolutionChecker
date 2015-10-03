@@ -2,11 +2,15 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
 bool writeBug = false;
 bool writeFileNames = false;
+
+string waColor = "\033[1;33m";
+string clearColor = "\033[0m";
 
 string patStr;
 string tesStr;
@@ -30,6 +34,18 @@ bool readNext(ifstream &_file, string &_str)
 	}
 	else
 		return false;
+}
+
+string cutString(string _str, unsigned int _maxSize = 20)	//cuts string when bigger than _maxSize
+{
+	string result = "";
+	for (int i = 0; i < min<unsigned int>(_maxSize, _str.size()); i++)
+	{
+		result += _str[i];
+	}
+	if (_maxSize < _str.size())
+		result += "...";
+	return result;
 }
 
 int main(int _argc, char *_argv[])
@@ -56,6 +72,11 @@ int main(int _argc, char *_argv[])
 				writeBug = true;
 			else if (strcmp(_argv[i], "-fname") == 0)
 				writeFileNames = true;
+			else if (strcmp(_argv[i], "-nocolor") == 0)
+			{
+				waColor = "";
+				clearColor = "";
+			}
 			else
 			{
 				cerr << "CMP: No arg called \"" << _argv[i] << "\" exists" << endl;
@@ -91,7 +112,7 @@ int main(int _argc, char *_argv[])
 		else if (pb == false || tb == false)
 		{
 			if (writeBug)
-				cout << (pb == false ? "Output file is too long" : "Output file is too short") << endl;
+				cout << waColor << (pb == false ? "Output file is too long" : "Output file is too short") << clearColor << endl;
 			
 			pat.close();
 			tes.close();
@@ -104,7 +125,7 @@ int main(int _argc, char *_argv[])
 			{
 				pat.close();
 				tes.close();
-				cout << "String:" << strNr << " Expected:" << patStr << " Readed:" << tesStr << endl;
+				cout << waColor << "String:" << clearColor << strNr << waColor << " Expected:" << clearColor << cutString(patStr) << waColor << " Readed:" << clearColor << cutString(tesStr) << endl;
 			}
 			return -1;
 		}

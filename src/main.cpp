@@ -19,21 +19,7 @@ using namespace std;
 
 void loadArgs(vector<std::string> &_args, string _settFile, int _argc, char *_argv[])
 {
-    ifstream in(_settFile);
-    if (!in.is_open())
-    {
-        throw (string("main:loadArgs: can't open settings file \"") + _settFile + string("\""));
-    }
-    else
-    {
-        string bufRead;
-        do
-        {
-            bufRead = readLine(in);
-            _args.push_back(bufRead);
-        } while (in.eof() == false);
-
-    }
+    loadSettingsFromFile(_args, _settFile);
     for (int i = 1; i < _argc; i++)
     {
         _args.push_back(_argv[i]);
