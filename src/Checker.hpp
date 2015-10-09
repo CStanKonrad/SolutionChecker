@@ -38,6 +38,6 @@ void checkSolution(const SSettings &_settings);
 void checkDiff(const SSettings &_settings);
 void checkGenerate(const SSettings &_settings);
 
-SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile, const std::string &_testNameColor);
+SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile, const std::string &_testNameColor, const int _testNumber = -1);
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_CHECKER_HPP_INCLUDED

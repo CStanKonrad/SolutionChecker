@@ -14,6 +14,7 @@ struct SSettings
     ECheckOrder checkOrder = ECheckOrder::DEFAULT;
 
     bool waStop = false;	//stop when cmp returns <> 0
+    bool noClearStop = false;   //stop when cmp returns <> 0 or solution returns <> 0 or time limit exceeded
     bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
     bool isColorOutputEnabled = true;
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
@@ -21,18 +22,21 @@ struct SSettings
     std::string solutionRunPrefix = ""; //for example = "python2 "
 
     std::string testSubFolder = "";
+    std::string solutionName;   //solution file name
     std::string solutionSubFolder = "";
 
     std::string testName = "";  //if testName.size() > 0 then only this test is checked
     std::string taskSuperFolder = "tasks/";
     std::string taskName;
 
+
     std::string generatorName = "";
     std::string generatorOptions = "";
     std::string generatorRunPrefix = "";
+    int generatorSeed = 0;
+    int generatorNumOfCalls = 0;
     std::string pattern = "";   //pattern program for genarate checking
     std::string patternRunPrefix = "";
-    int generatorNumOfCalls = 0;
     std::string cmpFunction = "cmp/default";
     std::string cmpOptions = "";
 
