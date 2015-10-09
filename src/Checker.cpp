@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 std::string makeOutFromIn(const std::string &_inFileName)
 {
@@ -244,7 +245,15 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _settings.testSubFolder +  _outputFile + std::string("\"  tmp/tested.out")).c_str());
 	if (result.cmpReturnVal != int(result.ECmpRet::OK) && _settings.waSave == true)
 	{
-        copyFile("tmp/tested.out", _fullPath + _settings.testSubFolder + std::string("solution.wa/"), _outputFile);
+        std::string copiedTestPrefix;
+        if (_settings.checkType == ECheckType::GENERATE && _settings.testName.size() > 0)
+            copiedTestPrefix = std::to_string(_testNumber) + std::string("::");
+        else
+            copiedTestPrefix = "";
+
+        copyFile("tmp/tested.out", _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _outputFile + std::string(".wa"));
+        copyFile(_fullPath + _settings.testSubFolder +  _inputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _inputFile);
+        copyFile(_fullPath + _settings.testSubFolder +  _outputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _outputFile);
 	}
 	if (result.solutionReturnVal != int(result.ESolRet::OK))
 	{
