@@ -6,7 +6,7 @@
 #include "Limit.hpp"
 /*use existing files; check out using "checker" program;
 generate one file with "generator" check out with "pattern" program stop when difference, like before but safe when out is good too*/
-enum class ECheckType {DIFF, GENERATE};
+enum class ECheckType {DIFF, GENERATE, ANSWER};
 enum class ECheckOrder {DEFAULT, ALPHABETICAL};
 struct SSettings
 {

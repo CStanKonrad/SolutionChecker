@@ -176,6 +176,10 @@ void SSettings::update(std::vector<std::string> &_args)
                 throw "SSettings::update: No test name provided in next string";
             i += 1;
         }
+        else if (_args[i] == "-ans")
+        {
+            this->checkType = ECheckType::ANSWER;
+        }
         else if (_args[i] == "-gen")
         {
             if (i + 1 < _args.size())

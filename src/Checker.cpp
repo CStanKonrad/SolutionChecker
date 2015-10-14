@@ -87,6 +87,8 @@ void checkSolution(const SSettings &_settings)
     case ECheckType::GENERATE:
         checkGenerate(_settings);
         break;
+    case ECheckType::ANSWER:
+        generateAnswers(_settings);
     default:
         throw "checkSolution: Sorry but that option isn't available";
         break;
@@ -144,6 +146,80 @@ void checkGenerate(const SSettings &_settings)
         std::cout << "---------------" << std::endl;
         std::cout.flush();
     }
+}
+
+void generateAnswers(const SSettings &_settings)
+{
+    CStoper stoper;
+
+    std::string fullPath = createFullPath(_settings);
+    CFile dirBrowser;
+    dirBrowser.openDir(fullPath + _settings.testSubFolder);
+
+    SDefaultTestSpec fileNameBuf;
+    fileNameBuf.in = dirBrowser.nextFile();
+
+    std::vector <std::string> inputNames;
+    if (_settings.testName.size() > 0)
+        inputNames.push_back(_settings.testName);
+    else
+    {
+        while (fileNameBuf.in.size() > 0)
+        {
+            inputNames.push_back(fileNameBuf.in);
+            fileNameBuf.in = dirBrowser.nextFile();
+        }
+    }
+    if (_settings.checkOrder == ECheckOrder::ALPHABETICAL)
+    {
+        std::sort(inputNames.begin(), inputNames.end(), solSortAlphabetical);
+    }
+
+    SCheckResult checkResult;
+    SCheckStatistics checkStats;
+    checkResult.cmpReturnVal = (int)checkResult.ECmpRet::OK;
+    for (unsigned int i = 0; i < inputNames.size(); i++)
+    {
+        fileNameBuf.in = inputNames[i];
+
+        if (isSuffix(fileNameBuf.in, std::string(".in")) == true)
+        {
+			fileNameBuf.out = makeOutFromIn(fileNameBuf.in);
+
+            stoper.begin();
+            checkResult.solutionReturnVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
+                                                   +(_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
+                                                   +(_settings.solutionRunPrefix + std::string("\"") + fullPath + _settings.solutionName + std::string("\" < \"") + fullPath + _settings.testSubFolder +  fileNameBuf.in + std::string("\" > \"") + fullPath + _settings.testSubFolder +  fileNameBuf.out + std::string("\""))).c_str());
+            stoper.end();
+
+            updateCheckStats(checkStats, checkResult);
+
+            std::cout << fileNameBuf.in << " > " << fileNameBuf.out << ": " << stoper.getTimeString() << " r: " << checkResult.solutionReturnVal << " ";
+            if (checkResult.solutionReturnVal == (int)checkResult.ESolRet::TLE)
+                std::cout << _settings.tleMessage;
+            else if (checkResult.solutionReturnVal != (int)checkResult.ESolRet::OK)
+                std::cout << _settings.errorMessage;
+            else
+                std::cout << _settings.okMessage;
+            std::cout << std::endl;
+
+            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
+				break;
+            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+                break;
+        }
+        else if (isSuffix(fileNameBuf.in, std::string(".test")) == true)
+        {
+            std::cerr << "generateAnswers:: Unsupported format .test" << std::endl;
+        }
+    }
+    std::cout << "----Summary----" << std::endl;
+    std::cout << "Tests:" << checkStats.numOfTests << " "
+    << _settings.errorMessage << ":" << checkStats.numOfErrors << " "
+    << _settings.tleMessage << ":" << checkStats.numOfTLE <<
+     std::endl;
+    std::cout << "---------------" << std::endl;
+    std::cout.flush();
 }
 
 
