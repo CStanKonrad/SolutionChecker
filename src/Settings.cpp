@@ -27,9 +27,17 @@ void SSettings::update(std::vector<std::string> &_args)
     for (unsigned int i = 0; i < _args.size(); i++)
     {
         if (_args[i][0] != '-')
+        {
             this->taskName = _args[i];
+            this->solutionName = _args[i];
+        }
         else if (_args[i] == "-was")
             this->waStop = true;
+        else if (_args[i] == "-ncs")
+        {
+            this->noClearStop = true;
+            this->waStop = true;
+        }
         else if (_args[i] == "-nocolor")
         {
             this->isColorOutputEnabled = false;
@@ -85,6 +93,19 @@ void SSettings::update(std::vector<std::string> &_args)
                 throw "SSettings::update: No generator arguments provided in next string";
             i += 1;
         }
+        else if (_args[i] == "-gseed")
+        {
+            if (i + 1 < _args.size())
+                this->generatorSeed = std::stoi(_args[i + 1]);
+            else
+                throw "SSettings::update: No generator seed provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-gseedt")
+        {
+            srand(time(0));
+            this->generatorSeed = rand();
+        }
         else if (_args[i] ==  "-prpref")
         {
 
@@ -108,6 +129,14 @@ void SSettings::update(std::vector<std::string> &_args)
                 this->solutionSubFolder = _args[i + 1];
             else
                 throw "SSettings::update: No folder name provided in next string";
+            i += 1;
+        }
+        else if (_args[i] == "-sn")
+        {
+            if (i + 1 < _args.size())
+                this->solutionName = _args[i + 1];
+            else
+                throw "SSettings::update: No solution name provided in next string";
             i += 1;
         }
         else if (_args[i] == "-meml")

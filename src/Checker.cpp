@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 std::string makeOutFromIn(const std::string &_inFileName)
 {
@@ -103,7 +104,7 @@ void checkGenerate(const SSettings &_settings)
     std::string inputFile;
     std::string outputFile;
 
-    int generatorReturnValue = 0;
+    int generatorReturnValue = _settings.generatorSeed;
     SCheckResult checkResult;
     SCheckStatistics checkStats;
     for (int i = 1; i <= _settings.generatorNumOfCalls; i++)
@@ -118,12 +119,14 @@ void checkGenerate(const SSettings &_settings)
             system((_settings.patternRunPrefix + std::string("\"") + fullPath + _settings.pattern + std::string("\" < \"") + fullPath + _settings.testSubFolder +  inputFile + std::string("\" > \"")
             + fullPath + _settings.testSubFolder +  outputFile + std::string("\"")).c_str());
 
-            checkResult = checkTest(_settings, stoper, fullPath, inputFile, outputFile, std::string("\033[0m"));
+            checkResult = checkTest(_settings, stoper, fullPath, inputFile, outputFile, std::string("\033[0m"), i);
 
             updateCheckStats(checkStats, checkResult);
 
             if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
 				break;
+            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+                break;
 
         }
 
@@ -135,7 +138,8 @@ void checkGenerate(const SSettings &_settings)
         << _settings.okMessage << ":" << checkStats.numOfOK  << " "
         << _settings.waMessage << ":" << checkStats.numOfWA << " "
         << _settings.errorMessage << ":" << checkStats.numOfErrors << " "
-        << _settings.tleMessage << ":" << checkStats.numOfTLE <<
+        << _settings.tleMessage << ":" << checkStats.numOfTLE << " "
+        << "seed:" << _settings.generatorSeed <<
          std::endl;
         std::cout << "---------------" << std::endl;
         std::cout.flush();
@@ -185,6 +189,8 @@ void checkDiff(const SSettings &_settings)
 
             if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
 				break;
+            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+                break;
         }
         else if (isSuffix(fileNameBuf.in, std::string(".test")) == true)
         {
@@ -196,6 +202,8 @@ void checkDiff(const SSettings &_settings)
 
             if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
 				break;
+            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+                break;
         }
     }
     std::cout << "----Summary----" << std::endl;
@@ -209,15 +217,22 @@ void checkDiff(const SSettings &_settings)
     std::cout.flush();
 
 }
-SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile, const std::string &_testNameColor)
+SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile, const std::string &_testNameColor, const int _testNumber)
 {
 	SCheckResult result;
 	_stoper.begin();
 	result.solutionReturnVal = system(((_settings.limits.memoryLimitArguments.size() != 0 ? _settings.limits.memoryLimitFunctionName + std::string (" ") + _settings.limits.memoryLimitArguments + std::string("\n") : std::string(""))
 	 + (_settings.limits.timeLimitArguments.size() != 0 ?  _settings.limits.timeLimitFunctionName + std::string (" ") + _settings.limits.timeLimitArguments + std::string (" ") : std::string (""))
-	 + _settings.solutionRunPrefix + std::string("\"") + _fullPath + _settings.solutionSubFolder + _settings.taskName + std::string("\" < \"") + _fullPath + _settings.testSubFolder +  _inputFile + std::string("\" > tmp/tested.out")
+	 + _settings.solutionRunPrefix + std::string("\"") + _fullPath + _settings.solutionSubFolder + _settings.solutionName + std::string("\" < \"") + _fullPath + _settings.testSubFolder +  _inputFile + std::string("\" > tmp/tested.out")
    ).c_str());
 	_stoper.end();
+
+    if (_settings.checkType == ECheckType::GENERATE && _settings.testName.size() > 0)
+    {
+        std::cout << "#";
+        std::cout.width(2);
+        std::cout << std::left << _testNumber << " ";
+    }
 
     if (_settings.isColorOutputEnabled == true)
         std::cout << _testNameColor;
@@ -230,7 +245,15 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _settings.testSubFolder +  _outputFile + std::string("\"  tmp/tested.out")).c_str());
 	if (result.cmpReturnVal != int(result.ECmpRet::OK) && _settings.waSave == true)
 	{
-        copyFile("tmp/tested.out", _fullPath + _settings.testSubFolder + std::string("solution.wa/"), _outputFile);
+        std::string copiedTestPrefix;
+        if (_settings.checkType == ECheckType::GENERATE && _settings.testName.size() > 0)
+            copiedTestPrefix = std::to_string(_testNumber) + std::string("::");
+        else
+            copiedTestPrefix = "";
+
+        copyFile("tmp/tested.out", _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _outputFile + std::string(".wa"));
+        copyFile(_fullPath + _settings.testSubFolder +  _inputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _inputFile);
+        copyFile(_fullPath + _settings.testSubFolder +  _outputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _outputFile);
 	}
 	if (result.solutionReturnVal != int(result.ESolRet::OK))
 	{
