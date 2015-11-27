@@ -14,8 +14,11 @@ struct SSettings
     ECheckOrder checkOrder = ECheckOrder::DEFAULT;
 
     bool waStop = false;	//stop when cmp returns <> 0
+    bool errStop = false;   //stop when solution returns <> 0
+    bool tleStop = false;   //stop when time limit exceeded
     bool noClearStop = false;   //stop when cmp returns <> 0 or solution returns <> 0 or time limit exceeded
     bool waSave = false;	//save ouptut from solution if answer is wront to /.../wa
+    bool terminateAsk = false; //true = ask before termination (checking with flags -was -ncs option)
     bool isColorOutputEnabled = true;
     //bool outputToLog = false;   // if true then redirect output to tmp/checkLog.txt
 
@@ -45,6 +48,8 @@ struct SSettings
     std::string waMessage = "\033[1;31mWA\033[0m";
     std::string errorMessage = "\033[1;41mERR\033[0m";
     std::string tleMessage = "\033[1;43mTLE\033[0m";
+
+    std::string terminationAskMessage = std::string("\033[1;37m\033[45m # \033[0m ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" \033[1;37mexisted.") + std::string(" \033[45m # \033[0m ") + std::string("\033[1;37mDo you want to stop checking?(y or n):\033[0m");
 
     CLimit limits;
 

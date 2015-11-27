@@ -39,7 +39,7 @@ bool readNext(ifstream &_file, string &_str)
 string cutString(string _str, unsigned int _maxSize = 20)	//cuts string when bigger than _maxSize
 {
 	string result = "";
-	for (int i = 0; i < min<unsigned int>(_maxSize, _str.size()); i++)
+	for (unsigned int i = 0; i < min<unsigned int>(_maxSize, _str.size()); i++)
 	{
 		result += _str[i];
 	}

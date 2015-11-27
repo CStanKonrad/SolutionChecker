@@ -31,8 +31,14 @@ void SSettings::update(std::vector<std::string> &_args)
             this->taskName = _args[i];
             this->solutionName = _args[i];
         }
+        else if (_args[i] == "-tera")
+            this->terminateAsk = true;
         else if (_args[i] == "-was")
             this->waStop = true;
+        else if (_args[i] == "-tles")
+            this->tleStop = true;
+        else if (_args[i] == "-errs")
+            this->errStop = true;
         else if (_args[i] == "-ncs")
         {
             this->noClearStop = true;
@@ -45,6 +51,8 @@ void SSettings::update(std::vector<std::string> &_args)
             this->waMessage = "WA";
             this->errorMessage = "ERR";
             this->tleMessage = "TLE";
+
+            this->terminationAskMessage = std::string(" #  ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" existed.") + std::string("  #  ") + std::string("Do you want to stop checking?(y or n):");
         }
         else if (_args[i] ==  "-cmpf")
         {
