@@ -207,7 +207,7 @@ void generateAnswers(const SSettings &_settings)
 				break;
             if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
                 break;
-            std::cout << (std::string("zip -j \"") + fullPath + _settings.testSubFolder + _settings.solutionName + std::string("\" \"") + fullPath + _settings.testSubFolder +  fileNameBuf.out + std::string("\"")) << std::endl;
+            //std::cout << (std::string("zip -j \"") + fullPath + _settings.testSubFolder + _settings.solutionName + std::string("\" \"") + fullPath + _settings.testSubFolder +  fileNameBuf.out + std::string("\"")) << std::endl;
             system((std::string("zip -j \"") + fullPath + _settings.testSubFolder + _settings.solutionName + std::string("\" \"") + fullPath + _settings.testSubFolder +  fileNameBuf.out + std::string("\"")).c_str());
         }
         else if (isSuffix(fileNameBuf.in, std::string(".test")) == true)
