@@ -12,11 +12,11 @@ int main(int _argc, char *_argv[])
 		cerr << "Generator: No n provided" << endl;
 		return -1;
 	}
-	srand(stoi(_argv[1]));
+	srand(stoi(_argv[1]) + 1);
 	int n = stoi(string(_argv[2]));
 	for (int i = 0; i < n; i++)
 	{
 		putchar((rand()%('z' - 'a' + 1)) + 'a');
 	}
-	return rand();
+	return 0;
 }

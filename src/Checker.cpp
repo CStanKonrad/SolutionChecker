@@ -57,17 +57,71 @@ bool solSortAlphabetical(const std::string &_a, const std::string &_b)
     return false;
 }
 
+bool askForTermination(const SSettings &_settings)    //true = terminate; false = don't terminate
+{
+    std::string tmp;
+    std::cout << _settings.terminationAskMessage;
+    std::cin >> tmp;
+    if (tmp == "y" || tmp == "Y")
+        return true;
+    else if (tmp == "n" || tmp == "N")
+        return  false;
+    else
+    {
+        throw (std::string("shouldCheckingBeTerminated: Wrong input: expected y, Y, n or N readed:") + tmp);
+    }
+}
+
+bool shouldCheckingBeTerminated(const SSettings &_settings, const SCheckResult &_checkResult)
+{
+
+    if (_checkResult.solutionReturnVal != int(SCheckResult::ESolRet::OK))
+    {
+        if (_settings.noClearStop == true || ((_checkResult.solutionReturnVal == int(SCheckResult::ESolRet::TLE)) && (_settings.tleStop == true)) ||
+            ((_checkResult.solutionReturnVal != int(SCheckResult::ESolRet::TLE)) && (_settings.errStop == true)))
+        {
+            if (_settings.terminateAsk == true)
+            {
+                return askForTermination(_settings);
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+    else if (_checkResult.cmpReturnVal != int(SCheckResult::ECmpRet::OK))
+    {
+        if (_settings.noClearStop == true || _settings.waStop)
+        {
+            if (_settings.terminateAsk == true)
+            {
+                return askForTermination(_settings);
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void updateCheckStats(SCheckStatistics &_stats, const SCheckResult &_result)
 {
-    if (_result.cmpReturnVal != int(_result.ECmpRet::OK) || _result.solutionReturnVal != int(_result.ESolRet::OK))
+
+    if (_result.solutionReturnVal != int(SCheckResult::ESolRet::OK))
+    {
+        if (_result.solutionReturnVal == int(SCheckResult::ESolRet::TLE))
+            _stats.numOfTLE++;
+        else if (_result.solutionReturnVal != int(SCheckResult::ESolRet::OK))
+            _stats.numOfErrors++;
+    }
+    else if (_result.cmpReturnVal != int(SCheckResult::ECmpRet::OK))
     {
         if (_result.cmpReturnVal != int(_result.ECmpRet::OK))
             _stats.numOfWA++;
-
-        if (_result.solutionReturnVal == int(_result.ESolRet::TLE))
-            _stats.numOfTLE++;
-        else if (_result.solutionReturnVal != int(_result.ESolRet::OK))
-            _stats.numOfErrors++;
     }
     else
     {
@@ -110,8 +164,10 @@ void checkGenerate(const SSettings &_settings)
     for (int i = 1; i <= _settings.generatorNumOfCalls; i++)
     {
         inputFile = (_settings.testName.size() == 0 ? std::to_string(i) + std::string(".in"): _settings.testName);
-        generatorReturnValue = system((_settings.generatorRunPrefix + std::string("\"") + fullPath + _settings.generatorName + std::string("\"") + std::string(" ") + std::to_string(generatorReturnValue)
+        system((_settings.generatorRunPrefix + std::string("\"") + fullPath + _settings.generatorName + std::string("\"") + std::string(" ") + std::to_string(generatorReturnValue)
         + std::string(" ") + _settings.generatorOptions + std::string(" > ") + std::string("\"") + fullPath + _settings.testSubFolder + inputFile + std::string("\"")).c_str());
+
+        generatorReturnValue++;
 
         if (_settings.pattern.size() != 0)
         {
@@ -123,10 +179,12 @@ void checkGenerate(const SSettings &_settings)
 
             updateCheckStats(checkStats, checkResult);
 
-            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
+            if (shouldCheckingBeTerminated(_settings, checkResult) == true)
+                break;
+            /*if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
 				break;
             if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
-                break;
+                break;*/
 
         }
 
@@ -187,9 +245,7 @@ void checkDiff(const SSettings &_settings)
 
             updateCheckStats(checkStats, checkResult);
 
-            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
-				break;
-            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+            if (shouldCheckingBeTerminated(_settings, checkResult) == true)
                 break;
         }
         else if (isSuffix(fileNameBuf.in, std::string(".test")) == true)
@@ -200,9 +256,7 @@ void checkDiff(const SSettings &_settings)
 
             updateCheckStats(checkStats, checkResult);
 
-            if (checkResult.cmpReturnVal != int(checkResult.ECmpRet::OK) && _settings.waStop == true)
-				break;
-            if (checkResult.solutionReturnVal != int(checkResult.ESolRet::OK) && _settings.noClearStop == true)
+            if (shouldCheckingBeTerminated(_settings, checkResult) == true)
                 break;
         }
     }
@@ -261,8 +315,13 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
             std::cout << _settings.tleMessage + std::string(" ");
         else
             std::cout << _settings.errorMessage + std::string(" ");
+
+        std::cout << std::endl;
 	}
-    std::cout << (result.cmpReturnVal == int(result.ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;
+	else
+    {
+        std::cout << (result.cmpReturnVal == int(result.ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;
+    }
     std::cout.flush();
 	return result;
 }
