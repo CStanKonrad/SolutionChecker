@@ -52,6 +52,9 @@ void SSettings::update(std::vector<std::string> &_args)
             this->errorMessage = "ERR";
             this->tleMessage = "TLE";
 
+            this->string_Solutiond = "Solution:";
+            this->string_Test_folderd = "Test folder:";
+
             this->terminationAskMessage = std::string(" #  ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" existed.") + std::string("  #  ") + std::string("Do you want to stop checking?(y or n):");
         }
         else if (_args[i] ==  "-cmpf")

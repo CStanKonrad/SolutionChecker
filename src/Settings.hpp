@@ -49,6 +49,11 @@ struct SSettings
     std::string errorMessage = "\033[1;41mERR\033[0m";
     std::string tleMessage = "\033[1;43mTLE\033[0m";
 
+    std::string checkingStartMessage = "SolutionChecker - starting checking";
+
+    std::string string_Solutiond = "\033[1;37mSolution:\033[0m";
+    std::string string_Test_folderd = "\033[1;37mTest folder:\033[0m";
+
     std::string terminationAskMessage = std::string("\033[1;37m\033[45m # \033[0m ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" \033[1;37mexisted.") + std::string(" \033[45m # \033[0m ") + std::string("\033[1;37mDo you want to stop checking?(y or n):\033[0m");
 
     CLimit limits;

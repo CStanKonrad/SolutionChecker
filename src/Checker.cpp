@@ -120,7 +120,7 @@ void updateCheckStats(SCheckStatistics &_stats, const SCheckResult &_result)
     }
     else if (_result.cmpReturnVal != int(SCheckResult::ECmpRet::OK))
     {
-        if (_result.cmpReturnVal != int(_result.ECmpRet::OK))
+        if (_result.cmpReturnVal != int(SCheckResult::ECmpRet::OK))
             _stats.numOfWA++;
     }
     else
@@ -148,10 +148,20 @@ void checkSolution(const SSettings &_settings)
     return;
 }
 
+void displayCheckInfoBegin(const SSettings &_settings, const std::string &_fullpath)
+{
+    std::cout << _settings.checkingStartMessage << std::endl;
+    std::cout << std::endl;
+    std::cout << _settings.string_Solutiond << _settings.solutionName << std::endl;
+    std::cout << _settings.string_Test_folderd << _fullpath << std::endl;
+    std::cout << std::endl;
+}
+
 void checkGenerate(const SSettings &_settings)
 {
     CStoper stoper;
     std::string fullPath = createFullPath(_settings);
+    displayCheckInfoBegin(_settings, fullPath);
 
     createDir(fullPath + _settings.testSubFolder);
 
@@ -209,6 +219,9 @@ void checkDiff(const SSettings &_settings)
 {
     CStoper stoper;
     std::string fullPath = createFullPath(_settings);
+
+    displayCheckInfoBegin(_settings, fullPath);
+
     CFile dirBrowser;
     dirBrowser.openDir(fullPath + _settings.testSubFolder);
 
@@ -297,7 +310,7 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	std::cout << "r: " << result.solutionReturnVal << " ";
 
 	result.cmpReturnVal = system((std::string("\"") + _settings.cmpFunction + std::string("\" ") + _settings.cmpOptions + std::string(" \"") + _fullPath + _settings.testSubFolder +  _outputFile + std::string("\"  tmp/tested.out")).c_str());
-	if (result.cmpReturnVal != int(result.ECmpRet::OK) && _settings.waSave == true)
+	if (result.cmpReturnVal != int(SCheckResult::ECmpRet::OK) && _settings.waSave == true)
 	{
         std::string copiedTestPrefix;
         if (_settings.checkType == ECheckType::GENERATE && _settings.testName.size() > 0)
@@ -309,9 +322,9 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
         copyFile(_fullPath + _settings.testSubFolder +  _inputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _inputFile);
         copyFile(_fullPath + _settings.testSubFolder +  _outputFile, _fullPath + _settings.testSubFolder + std::string("solution.wa/"), copiedTestPrefix + _outputFile);
 	}
-	if (result.solutionReturnVal != int(result.ESolRet::OK))
+	if (result.solutionReturnVal != int(SCheckResult::ESolRet::OK))
 	{
-        if (result.solutionReturnVal == int(result.ESolRet::TLE))
+        if (result.solutionReturnVal == int(SCheckResult::ESolRet::TLE))
             std::cout << _settings.tleMessage + std::string(" ");
         else
             std::cout << _settings.errorMessage + std::string(" ");
@@ -320,7 +333,7 @@ SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::
 	}
 	else
     {
-        std::cout << (result.cmpReturnVal == int(result.ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;
+        std::cout << (result.cmpReturnVal == int(SCheckResult::ECmpRet::OK) ? _settings.okMessage : _settings.waMessage) << std::endl;
     }
     std::cout.flush();
 	return result;

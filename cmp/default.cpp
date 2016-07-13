@@ -10,6 +10,7 @@ bool writeBug = false;
 bool writeFileNames = false;
 
 string waColor = "\033[1;33m";
+string strongWhiteColor = "\033[1;37m";
 string clearColor = "\033[0m";
 
 string patStr;
@@ -23,10 +24,14 @@ bool isWhite(char _c)
 		return false;
 }
 
-bool readNext(ifstream &_file, string &_str)
+bool readNext(ifstream &_file, string &_str, int &_lineNr)
 {
 	while(isWhite(_file.peek()))
-		_file.get();
+	{
+		if (_file.get() == '\n')
+			++_lineNr;
+		
+	}
 	if (_file.eof() == false)
 	{
 		_file >> _str;
@@ -101,11 +106,13 @@ int main(int _argc, char *_argv[])
 	}
 	
 	int strNr = 1;
+	int patLineNr = 1;
+	int tesLineNr = 1;
 	bool pb, tb;
 	while (true)
 	{
-		pb = readNext(pat, patStr);
-		tb = readNext(tes, tesStr);
+		pb = readNext(pat, patStr, patLineNr);
+		tb = readNext(tes, tesStr, tesLineNr);
 
 		if (pb == false && tb == false)
 			break;
@@ -125,7 +132,8 @@ int main(int _argc, char *_argv[])
 			{
 				pat.close();
 				tes.close();
-				cout << waColor << "String:" << clearColor << strNr << waColor << " Expected:" << clearColor << cutString(patStr) << waColor << " Readed:" << clearColor << cutString(tesStr) << endl;
+				cout << waColor << "lnp/t:" << clearColor << strongWhiteColor << patLineNr << clearColor << "/" << strongWhiteColor << tesLineNr << clearColor
+				<< waColor << " str:" << clearColor << strNr << waColor << " Expected:" << clearColor << cutString(patStr) << waColor << " Readed:" << clearColor << cutString(tesStr) << endl;
 			}
 			return -1;
 		}
