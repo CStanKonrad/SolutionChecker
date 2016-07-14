@@ -1,19 +1,19 @@
 #include "TestConverter.hpp"
 #include <fstream>
 
-SDefaultTestSpec convertFormTestToDefault(const std::string &_path, const std::string &_testFileName)
+SDefaultTestSpec convertFormTestToDefault(const std::string &path_, const std::string &testFileName_)
 {
     SDefaultTestSpec emulatedTestFiles;
-    emulatedTestFiles.in = std::string("emulated/") + _testFileName + std::string(".in");
-    emulatedTestFiles.out = std::string("emulated/") + _testFileName + std::string(".out");
+    emulatedTestFiles.in = std::string("emulated/") + testFileName_ + std::string(".in");
+    emulatedTestFiles.out = std::string("emulated/") + testFileName_ + std::string(".out");
 
 
-    std::ifstream testFile(_path + _testFileName);
+    std::ifstream testFile(path_ + testFileName_);
     if (!testFile.is_open())
-        throw (std::string("convertFormTestToDefault:Can't open:") + _path + _testFileName);
+        throw (std::string("convertFormTestToDefault:Can't open:") + path_ + testFileName_);
 
-    createDir(_path + std::string("emulated/"));
-    std::ofstream inOut(_path + emulatedTestFiles.in), outOut(_path + emulatedTestFiles.out);
+    createDir(path_ + std::string("emulated/"));
+    std::ofstream inOut(path_ + emulatedTestFiles.in), outOut(path_ + emulatedTestFiles.out);
     if (inOut.is_open() == false || outOut.is_open() == false)
         throw (std::string("convertFormTestToDefault:Can't create emulated files") + emulatedTestFiles.in + std::string(" ") + emulatedTestFiles.out);
 
@@ -25,7 +25,7 @@ SDefaultTestSpec convertFormTestToDefault(const std::string &_path, const std::s
         buffer = readLine(testFile);
     }
     if (testFile.eof() == true)
-        throw (std::string("convertFormTestToDefault:No output provided in .test file:") + _testFileName);
+        throw (std::string("convertFormTestToDefault:No output provided in .test file:") + testFileName_);
     do
     {
         buffer = readLine(testFile);

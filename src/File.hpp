@@ -13,7 +13,7 @@ private:
     dirent *dirElement = nullptr;
 public:
     /* return true if directory can be opened else false */
-    void openDir(std::string _dirPath);  // for example "my/directory/" will enable browsing files from this directory
+    void openDir(std::string dirPath_);  // for example "my/directory/" will enable browsing files from this directory
     void closeDir();
 
     /* nextFile()
@@ -24,11 +24,11 @@ public:
 };
 
 /* read characters to string while (next_character != new_line) and read new_line (but not to string) */
-std::string readLine(std::ifstream &_in);
+std::string readLine(std::ifstream &in_);
 /* If no directory named _dir exists create one */
-void createDir(std::string _dir);
+void createDir(std::string dir_);
 /* copy content from _from to _toDir/_toFile */
-void copyFile(std::string _from, std::string _toDir, std::string _toFile);
+void copyFile(std::string from_, std::string toDir_, std::string toFile_);
 
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_FILE_HPP_INCLUDED

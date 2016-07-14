@@ -17,12 +17,12 @@ timeval start, endd;
 using namespace std;
 
 
-void loadArgs(vector<std::string> &_args, string _settFile, int _argc, char *_argv[])
+void loadArgs(vector<std::string> &args_, string settFile_, int argc_, char *argv_[])
 {
-    loadSettingsFromFile(_args, _settFile);
-    for (int i = 1; i < _argc; i++)
+    loadSettingsFromFile(args_, settFile_);
+    for (int i = 1; i < argc_; i++)
     {
-        _args.push_back(_argv[i]);
+        args_.push_back(argv_[i]);
     }
 }
 
@@ -37,13 +37,13 @@ int main(int argc, char *argv[])
         settings.update(arguments);
         checkSolution(settings);
     }
-    catch (const char *_bug)
+    catch (const char *bug_)
     {
-        cerr << "Error: " << _bug << endl;
+        cerr << "Error: " << bug_ << endl;
     }
-    catch (string _bug)
+    catch (string bug_)
     {
-	cerr << "Error: " << _bug << endl;
+	cerr << "Error: " << bug_ << endl;
     }
     //cerr << settings.cmpOptions << endl;
     //cerr << (int)settings.checkType << endl;

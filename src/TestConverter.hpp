@@ -10,6 +10,6 @@ struct SDefaultTestSpec
     std::string out = "";
 };
 
-SDefaultTestSpec convertFormTestToDefault(const std::string &_path, const std::string &_testFileName); //open (_path + _testFileName)
+SDefaultTestSpec convertFormTestToDefault(const std::string &path_, const std::string &testFileName_); //open (_path + _testFileName)
 
 #endif // CSTANKONRAD_TESTCONVERTER_HPP_INCLUDED

@@ -1,13 +1,13 @@
 #include "File.hpp"
 //#include <iostream>
 
-void CFile::openDir(std::string _dirPath)
+void CFile::openDir(std::string dirPath_)
 {
-    _dirPath += ".";
-    directory = opendir(_dirPath.c_str());
+    dirPath_ += ".";
+    directory = opendir(dirPath_.c_str());
 
     if (directory == nullptr)
-        throw (std::string("CFile::openDir: Can't open directory: ") + _dirPath);
+        throw (std::string("CFile::openDir: Can't open directory: ") + dirPath_);
 }
 
 void CFile::closeDir()
@@ -30,34 +30,34 @@ std::string CFile::nextFile()
 }
 
 
-std::string readLine(std::ifstream &_in)
+std::string readLine(std::ifstream &in_)
 {
     std::string result = "";
-    while (_in.peek() != '\n' && _in.eof() == false)
+    while (in_.peek() != '\n' && in_.eof() == false)
     {
-        result += _in.get();
+        result += in_.get();
     }
-    _in.get();
+    in_.get();
     return result;
 }
 
-void createDir(std::string _dir)
+void createDir(std::string dir_)
 {
     CFile dir;
     try
     {
-        dir.openDir(_dir);
+        dir.openDir(dir_);
     }
     catch (std::string _bug)
     {
-        //std::cout << "Creating: " << _toDir << std::endl;
-        system((std::string("mkdir \"") + _dir + std::string("\"")).c_str());
+        //std::cout << "Creating: " << toDir_ << std::endl;
+        system((std::string("mkdir \"") + dir_ + std::string("\"")).c_str());
     }
 }
 
-void copyFile(std::string _from, std::string _toDir, std::string _toFile)
+void copyFile(std::string from_, std::string toDir_, std::string toFile_)
 {
-    createDir(_toDir);
-    system((std::string("cat \"") + _from + std::string("\" > \"") +  _toDir + _toFile + std::string("\"")).c_str());
+    createDir(toDir_);
+    system((std::string("cat \"") + from_ + std::string("\" > \"") +  toDir_ + toFile_ + std::string("\"")).c_str());
 }
 

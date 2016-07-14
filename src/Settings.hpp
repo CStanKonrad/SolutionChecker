@@ -62,14 +62,14 @@ struct SSettings
 
     CLimit limits;
 
-    void update(std::vector<std::string> &_args);
+    void update(std::vector<std::string> &args_);
 };
 
 
-void loadSettingsFromFile(std::vector<std::string> &_args, std::string _settFile);
+void loadSettingsFromFile(std::vector<std::string> &args_, std::string settFile_);
 
 /* 'Creates' path to task folder */
-std::string createFullPath(const SSettings &_settings);
+std::string createFullPath(const SSettings &settings_);
 
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_SETTINGS_HPP_INCLUDED
