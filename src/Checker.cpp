@@ -267,6 +267,7 @@ void checkDiff(const SSettings &settings_)
             fileNameBuf.in = dirBrowser.nextFile();
         }
     }
+    dirBrowser.closeDir();
     if (settings_.checkOrder == ECheckOrder::ALPHABETICAL)
     {
         std::sort(inputNames.begin(), inputNames.end(), solSortAlphabetical);

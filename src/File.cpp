@@ -47,6 +47,7 @@ void createDir(std::string dir_)
     try
     {
         dir.openDir(dir_);
+        dir.closeDir();
     }
     catch (std::string _bug)
     {
