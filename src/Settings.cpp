@@ -52,8 +52,13 @@ void SSettings::update(std::vector<std::string> &_args)
             this->errorMessage = "ERR";
             this->tleMessage = "TLE";
 
+            this->color_attention = "";
+            this->color_reset = "";
+
+            this->string_Main_pathd = "Main path:";
             this->string_Solutiond = "Solution:";
-            this->string_Test_folderd = "Test folder:";
+            this->string_Patternd = "Pattern:";
+            this->string_Test_folderd = "Test subfolder:";
 
             this->terminationAskMessage = std::string(" #  ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" existed.") + std::string("  #  ") + std::string("Do you want to stop checking?(y or n):");
         }

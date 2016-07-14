@@ -43,16 +43,20 @@ struct SSettings
     std::string cmpFunction = "cmp/default";
     std::string cmpOptions = "";
 
+    std::string color_attention = "\033[1;41m";
+    std::string color_reset = "\033[0m";
 
     std::string okMessage = "\033[1;32mOK\033[0m";
     std::string waMessage = "\033[1;31mWA\033[0m";
     std::string errorMessage = "\033[1;41mERR\033[0m";
     std::string tleMessage = "\033[1;43mTLE\033[0m";
 
-    std::string checkingStartMessage = "SolutionChecker - starting checking";
+    std::string checkingStartMessage = "#######################################\n# SolutionChecker - starting checking #\n#######################################";
 
+    std::string string_Main_pathd = "\033[1;37mMain path:\033[0m";
     std::string string_Solutiond = "\033[1;37mSolution:\033[0m";
-    std::string string_Test_folderd = "\033[1;37mTest folder:\033[0m";
+    std::string string_Patternd = "\033[1;37mPattern:\033[0m";
+    std::string string_Test_folderd = "\033[1;37mTest subfolder:\033[0m";
 
     std::string terminationAskMessage = std::string("\033[1;37m\033[45m # \033[0m ") + waMessage + std::string("/") + errorMessage + std::string("/") + tleMessage + std::string(" \033[1;37mexisted.") + std::string(" \033[45m # \033[0m ") + std::string("\033[1;37mDo you want to stop checking?(y or n):\033[0m");
 

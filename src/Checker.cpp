@@ -152,9 +152,36 @@ void displayCheckInfoBegin(const SSettings &_settings, const std::string &_fullp
 {
     std::cout << _settings.checkingStartMessage << std::endl;
     std::cout << std::endl;
-    std::cout << _settings.string_Solutiond << _settings.solutionName << std::endl;
-    std::cout << _settings.string_Test_folderd << _fullpath << std::endl;
+    std::cout << _settings.string_Main_pathd << _fullpath << std::endl;
+    std::cout << _settings.string_Solutiond << _settings.solutionSubFolder + _settings.solutionName << std::endl;
+    std::cout << _settings.string_Patternd << _settings.pattern << std::endl;
+    std::cout << _settings.string_Test_folderd << _settings.testSubFolder << std::endl;
     std::cout << std::endl;
+}
+
+void displayCheckSummary(const SSettings &_settings, const SCheckStatistics &_checkStats)
+{
+    std::cout << "----Summary----" << std::endl;
+
+    if (_checkStats.numOfWA != 0 || _checkStats.numOfErrors != 0 || _checkStats.numOfTLE != 0)
+    {
+        std::cout << _settings.color_attention << "!!!!!!!!!!!!!" << _settings.color_reset << std::endl;
+
+        std::cout << _settings.color_attention << "!!!WARNING!!!" << _settings.color_reset << " you have at least one " << _settings.waMessage << ", "
+        << _settings.errorMessage << " or " << _settings.tleMessage << std::endl;
+
+        std::cout << _settings.color_attention << "!!!!!!!!!!!!!" << _settings.color_reset << std::endl;
+    }
+
+    std::cout << "Tests:" << _checkStats.numOfTests << " "
+    << _settings.okMessage << ":" << _checkStats.numOfOK  << " "
+    << _settings.waMessage << ":" << _checkStats.numOfWA << " "
+    << _settings.errorMessage << ":" << _checkStats.numOfErrors << " "
+    << _settings.tleMessage << ":" << _checkStats.numOfTLE << " "
+    << "seed:" << _settings.generatorSeed <<
+     std::endl;
+    std::cout << "---------------" << std::endl;
+    std::cout.flush();
 }
 
 void checkGenerate(const SSettings &_settings)
@@ -201,7 +228,8 @@ void checkGenerate(const SSettings &_settings)
     }
     if (_settings.pattern.size() != 0)
     {
-        std::cout << "----Summary----" << std::endl;
+        displayCheckSummary(_settings, checkStats);
+        /*std::cout << "----Summary----" << std::endl;
         std::cout << "Tests:" << checkStats.numOfTests << " "
         << _settings.okMessage << ":" << checkStats.numOfOK  << " "
         << _settings.waMessage << ":" << checkStats.numOfWA << " "
@@ -210,7 +238,7 @@ void checkGenerate(const SSettings &_settings)
         << "seed:" << _settings.generatorSeed <<
          std::endl;
         std::cout << "---------------" << std::endl;
-        std::cout.flush();
+        std::cout.flush();*/
     }
 }
 
@@ -273,7 +301,8 @@ void checkDiff(const SSettings &_settings)
                 break;
         }
     }
-    std::cout << "----Summary----" << std::endl;
+    displayCheckSummary(_settings, checkStats);
+    /*std::cout << "----Summary----" << std::endl;
     std::cout << "Tests:" << checkStats.numOfTests << " "
     << _settings.okMessage << ":" << checkStats.numOfOK  << " "
     << _settings.waMessage << ":" << checkStats.numOfWA << " "
@@ -281,7 +310,7 @@ void checkDiff(const SSettings &_settings)
     << _settings.tleMessage << ":" << checkStats.numOfTLE <<
      std::endl;
     std::cout << "---------------" << std::endl;
-    std::cout.flush();
+    std::cout.flush();*/
 
 }
 SCheckResult checkTest(const SSettings &_settings, CStoper &_stoper, const std::string &_fullPath, const std::string &_inputFile, const std::string &_outputFile, const std::string &_testNameColor, const int _testNumber)

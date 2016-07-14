@@ -133,7 +133,7 @@ int main(int _argc, char *_argv[])
 				pat.close();
 				tes.close();
 				cout << waColor << "lnp/t:" << clearColor << strongWhiteColor << patLineNr << clearColor << "/" << strongWhiteColor << tesLineNr << clearColor
-				<< waColor << " str:" << clearColor << strNr << waColor << " Expected:" << clearColor << cutString(patStr) << waColor << " Readed:" << clearColor << cutString(tesStr) << endl;
+				<< waColor << " str:" << clearColor << strNr << waColor << " exp:" << clearColor << cutString(patStr) << waColor << " read:" << clearColor << cutString(tesStr) << endl;
 			}
 			return -1;
 		}
