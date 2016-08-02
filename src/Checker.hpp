@@ -42,6 +42,6 @@ void checkGenerate(const SSettings &settings_);
 
 
 
-SCheckResult checkTest(const SSettings &settings_, CStoper &stoper_, const std::string &fullPath_, const std::string &inputFile_, const std::string &outputFile_, const std::string &testNameColor_, const int testNumber_ = -1);
+SCheckResult checkTest(const SSettings &settings_, CStoper &stoper_, const std::string &fullPath_, const std::string &inputFile_, const std::string &outputFile_, const std::string &testNameColor_, const int testNumber_ = -1, CStoper *patStoper_ = nullptr);
 
 #endif // CSTANKONRAD_SOLUTIONCHECKER_CHECKER_HPP_INCLUDED

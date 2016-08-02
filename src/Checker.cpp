@@ -186,7 +186,7 @@ void displayCheckSummary(const SSettings &settings_, const SCheckStatistics &che
 
 void checkGenerate(const SSettings &settings_)
 {
-    CStoper stoper;
+    CStoper stoper, stoperPat;
     std::string fullPath = createFullPath(settings_);
     displayCheckInfoBegin(settings_, fullPath);
 
@@ -209,10 +209,12 @@ void checkGenerate(const SSettings &settings_)
         if (settings_.pattern.size() != 0)
         {
             outputFile = makeOutFromIn(inputFile);
+            stoperPat.begin();
             system((settings_.patternRunPrefix + std::string("\"") + fullPath + settings_.pattern + std::string("\" < \"") + fullPath + settings_.testSubFolder +  inputFile + std::string("\" > \"")
             + fullPath + settings_.testSubFolder +  outputFile + std::string("\"")).c_str());
+            stoperPat.end();
 
-            checkResult = checkTest(settings_, stoper, fullPath, inputFile, outputFile, std::string("\033[0m"), i);
+            checkResult = checkTest(settings_, stoper, fullPath, inputFile, outputFile, std::string("\033[0m"), i, &stoperPat);
 
             updateCheckStats(checkStats, checkResult);
 
@@ -314,7 +316,7 @@ void checkDiff(const SSettings &settings_)
     std::cout.flush();*/
 
 }
-SCheckResult checkTest(const SSettings &settings_, CStoper &stoper_, const std::string &fullpath_, const std::string &inputFile_, const std::string &outputFile_, const std::string &testNameColor_, const int testNumber_)
+SCheckResult checkTest(const SSettings &settings_, CStoper &stoper_, const std::string &fullpath_, const std::string &inputFile_, const std::string &outputFile_, const std::string &testNameColor_, const int testNumber_, CStoper *patStoper_)
 {
 	SCheckResult result;
 	stoper_.begin();
@@ -336,7 +338,17 @@ SCheckResult checkTest(const SSettings &settings_, CStoper &stoper_, const std::
 	std::cout << inputFile_ << ": ";
 	if (settings_.isColorOutputEnabled == true)
         std::cout << "\033[0m";
-	std::cout << stoper_.getTimeString() << " ";
+
+    if (patStoper_ != nullptr)
+        std::cout << (stoper_.getTime() < patStoper_->getTime() ? settings_.color_ok_green : settings_.color_wa_red);
+
+	std::cout << stoper_.getTimeString() ;
+	if (patStoper_ != nullptr)
+	{
+        std::cout << settings_.color_reset << "/";
+        std::cout << patStoper_->getTimeString();
+	}
+	std::cout << " ";
 	std::cout << "r: " << result.solutionReturnVal << " ";
 
 	result.cmpReturnVal = system((std::string("\"") + settings_.cmpFunction + std::string("\" ") + settings_.cmpOptions + std::string(" \"") + fullpath_ + settings_.testSubFolder +  outputFile_ + std::string("\"  tmp/tested.out")).c_str());

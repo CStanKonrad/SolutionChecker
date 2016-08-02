@@ -54,6 +54,8 @@ void SSettings::update(std::vector<std::string> &args_)
 
             this->color_attention = "";
             this->color_reset = "";
+            this->color_ok_green = "";
+            this->color_wa_red = "";
 
             this->string_Main_pathd = "Main path:";
             this->string_Solutiond = "Solution:";

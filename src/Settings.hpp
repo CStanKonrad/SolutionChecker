@@ -45,6 +45,8 @@ struct SSettings
 
     std::string color_attention = "\033[1;41m";
     std::string color_reset = "\033[0m";
+    std::string color_ok_green = "\033[1;32m";
+    std::string color_wa_red = "\033[1;31m";
 
     std::string okMessage = "\033[1;32mOK\033[0m";
     std::string waMessage = "\033[1;31mWA\033[0m";
