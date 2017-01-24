@@ -2,6 +2,7 @@
 #include "File.hpp"
 #include <cstring>
 #include <fstream>
+#include <iostream>
 
 void loadSettingsFromFile(std::vector<std::string> &args_, std::string settFile_)
 {
@@ -16,6 +17,8 @@ void loadSettingsFromFile(std::vector<std::string> &args_, std::string settFile_
         do
         {
             bufRead = readLine(in);
+            if (bufRead.size() == 0)
+                continue;
             args_.push_back(bufRead);
         } while (in.eof() == false);
 
